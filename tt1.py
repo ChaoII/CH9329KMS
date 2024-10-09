@@ -1,11 +1,6 @@
-import time
-
 import serial
-from loguru import logger
 
-from common import compose_packet, reset
 from mouse_map import Mouse
-from key_map import KeyBoard
 
 ser = serial.Serial('COM3', 9600)  # 开启串口
 # key_board = KeyBoard(ser)
