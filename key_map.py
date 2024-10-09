@@ -1,10 +1,10 @@
 import enum
 import time
-import warnings
 
 from serial import Serial
+from loguru import logger
 
-from common import get_check_sum, compose_packet, get_reply_status, CMD
+from common import get_check_sum, compose_packet, get_reply_status, CMD, ReplyStatus
 
 
 class KeyBoard:
@@ -96,7 +96,7 @@ class KeyBoard:
         L_CTRL = bytearray.fromhex("01")
 
     def __init__(self, ser: Serial):
-        self._ser = ser
+        self.ser = ser
 
     def send_data(self, data: list[Key], ctrl: Control = Control.NULL):
         # 将字符转写为数据包
@@ -110,7 +110,7 @@ class KeyBoard:
         keyboard_data += bytearray.fromhex("00")
         # 第3到8个字节
         if len(data) > 6:
-            warnings.warn("键盘最多只能输入6个键")
+            logger.warning("键盘最多只能输入6个键")
         for key in data:
             keyboard_data += key.value
         if len(keyboard_data) < 8:
@@ -119,15 +119,18 @@ class KeyBoard:
             keyboard_data = keyboard_data[:8]
         check_sum = get_check_sum(keyboard_cmd, data_len, keyboard_data)
         packet = compose_packet(keyboard_cmd, data_len, keyboard_data, check_sum)
-        print(packet.hex(sep=" "))
-        self._ser.write(packet)
+        logger.info(f"发送数据包: {packet.hex(sep=' ')}")
+        self.ser.write(packet)
 
         time.sleep(0.1)
-        received_data = self._ser.read(self._ser.in_waiting)  # 读取所有可用的数据
+        received_data = self.ser.read(self.ser.in_waiting)  # 读取所有可用的数据
         if received_data:
-            print("接收到的数据:", received_data.hex(sep=" "))
-        reply_code = bytearray(received_data)
-        return get_reply_status(keyboard_cmd, reply_code)
+            logger.info(f"接收到的数据包: {received_data.hex(sep=' ')}")
+            reply_code = bytearray(received_data)
+            return get_reply_status(keyboard_cmd, reply_code)
+        else:
+            logger.error("没有收到回复")
+            return ReplyStatus.UNAVAILABLE_REPLY
 
     def release(self):
         return self.send_data([self.Key.RELEASE], self.Control.NULL)
