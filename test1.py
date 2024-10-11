@@ -13,6 +13,7 @@ ser = serial.Serial('/dev/tty.usbserial-14130', 9600)  # 开启串口
 
 mouse = Mouse(screen_width=1920, screen_height=1080, ser=ser)
 keyboard = KeyBoard(ser)
+
 # 1.打开浏览器
 logger.warning("1.打开浏览器")
 mouse.send_data_absolute(37, 542)
@@ -49,6 +50,7 @@ time.sleep(0.5)
 logger.warning("5.滑动解锁")
 mouse.send_data_absolute(738, 582, 0, ctrl=Mouse.MouseButton.Button_Left)
 mouse.send_data_absolute(1200, 581, 0, ctrl=Mouse.MouseButton.Button_Left)
+mouse.send_data_absolute(0, 0, 0, Mouse.MouseButton.NULL)
 time.sleep(0.5)
 
 # 6.点击登录
@@ -138,11 +140,13 @@ mouse.send_data_absolute(110, 395)
 mouse.left_button_click()
 keyboard.input_string("It is a test remark")
 time.sleep(0.5)
+
 # 16. 点击【计算】
 logger.warning("16.计算")
 mouse.send_data_absolute(1783, 473)
 mouse.left_button_click()
 time.sleep(0.5)
+
 # 17.点击确定
 logger.warning("17.点击确认")
 mouse.send_data_absolute(1865, 1064)
