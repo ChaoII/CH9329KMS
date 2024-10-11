@@ -3,7 +3,6 @@ import time
 
 from serial import Serial
 from common import logger
-
 from common import get_check_sum, compose_packet, get_reply_status, CMD, ReplyStatus
 
 

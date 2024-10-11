@@ -138,7 +138,11 @@ time.sleep(1)
 logger.warning("15.填写备注")
 mouse.send_data_absolute(110, 395)
 mouse.left_button_click()
-keyboard.input_string("It is a test remark")
+keyboard.press_shift_key()
+keyboard.input_string("zheshiyigeceshibeizhu")
+keyboard.press_space_key()
+keyboard.press_enter_key()
+keyboard.press_shift_key()
 time.sleep(0.5)
 
 # 16. 点击【计算】
