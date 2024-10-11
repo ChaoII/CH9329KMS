@@ -1,9 +1,7 @@
 import enum
 import time
-
-from loguru import logger
 from serial import Serial
-
+from common import logger
 from common import CMD, get_check_sum, compose_packet, get_reply_status, ReplyStatus
 
 

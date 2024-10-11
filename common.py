@@ -1,6 +1,13 @@
 import enum
 import time
 
+import sys
+
+from loguru import logger
+
+logger.remove()
+logger.add(sys.stderr, level="WARNING")
+
 port = 'COM3'  # 根据实际情况修改端口号
 baud_rate = 9600  # 波特率
 timeout = 1  # 读超时

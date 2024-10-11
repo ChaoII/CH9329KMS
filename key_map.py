@@ -2,7 +2,7 @@ import enum
 import time
 
 from serial import Serial
-from loguru import logger
+from common import logger
 
 from common import get_check_sum, compose_packet, get_reply_status, CMD, ReplyStatus
 
@@ -20,6 +20,7 @@ class KeyBoard:
         Key_8 = bytearray.fromhex("25")
         Key_9 = bytearray.fromhex("26")
         Key_0 = bytearray.fromhex("27")
+        Key_Shift = bytearray.fromhex("E1")
         Key_Enter = bytearray.fromhex("28")
         Key_ESC = bytearray.fromhex("29")
         Key_Minus = bytearray.fromhex("2D")  # -_
@@ -95,6 +96,117 @@ class KeyBoard:
         L_SHIFT = bytearray.fromhex("02")
         L_CTRL = bytearray.fromhex("01")
 
+    key_map = {
+        "a": [Key.Key_A, Control.NULL],
+        "b": [Key.Key_B, Control.NULL],
+        "c": [Key.Key_C, Control.NULL],
+        "d": [Key.Key_D, Control.NULL],
+        "e": [Key.Key_E, Control.NULL],
+        "f": [Key.Key_F, Control.NULL],
+        "g": [Key.Key_G, Control.NULL],
+        "h": [Key.Key_H, Control.NULL],
+        "i": [Key.Key_I, Control.NULL],
+        "j": [Key.Key_J, Control.NULL],
+        "k": [Key.Key_K, Control.NULL],
+        "l": [Key.Key_L, Control.NULL],
+        "m": [Key.Key_M, Control.NULL],
+        "n": [Key.Key_N, Control.NULL],
+        "o": [Key.Key_O, Control.NULL],
+        "p": [Key.Key_P, Control.NULL],
+        "q": [Key.Key_Q, Control.NULL],
+        "r": [Key.Key_R, Control.NULL],
+        "s": [Key.Key_S, Control.NULL],
+        "t": [Key.Key_T, Control.NULL],
+        "u": [Key.Key_U, Control.NULL],
+        "v": [Key.Key_V, Control.NULL],
+        "w": [Key.Key_W, Control.NULL],
+        "x": [Key.Key_X, Control.NULL],
+        "y": [Key.Key_Y, Control.NULL],
+        "z": [Key.Key_Z, Control.NULL],
+
+        "A": [Key.Key_A, Control.L_SHIFT],
+        "B": [Key.Key_B, Control.L_SHIFT],
+        "C": [Key.Key_C, Control.L_SHIFT],
+        "D": [Key.Key_D, Control.L_SHIFT],
+        "E": [Key.Key_E, Control.L_SHIFT],
+        "F": [Key.Key_F, Control.L_SHIFT],
+        "G": [Key.Key_G, Control.L_SHIFT],
+        "H": [Key.Key_H, Control.L_SHIFT],
+        "I": [Key.Key_I, Control.L_SHIFT],
+        "J": [Key.Key_J, Control.L_SHIFT],
+        "K": [Key.Key_K, Control.L_SHIFT],
+        "L": [Key.Key_L, Control.L_SHIFT],
+        "M": [Key.Key_M, Control.L_SHIFT],
+        "N": [Key.Key_N, Control.L_SHIFT],
+        "O": [Key.Key_O, Control.L_SHIFT],
+        "P": [Key.Key_P, Control.L_SHIFT],
+        "Q": [Key.Key_Q, Control.L_SHIFT],
+        "R": [Key.Key_R, Control.L_SHIFT],
+        "S": [Key.Key_S, Control.L_SHIFT],
+        "T": [Key.Key_T, Control.L_SHIFT],
+        "U": [Key.Key_U, Control.L_SHIFT],
+        "V": [Key.Key_V, Control.L_SHIFT],
+        "W": [Key.Key_W, Control.L_SHIFT],
+        "X": [Key.Key_X, Control.L_SHIFT],
+        "Y": [Key.Key_Y, Control.L_SHIFT],
+        "Z": [Key.Key_Z, Control.L_SHIFT],
+
+        "1": [Key.Key_1, Control.NULL],
+        "2": [Key.Key_2, Control.NULL],
+        "3": [Key.Key_3, Control.NULL],
+        "4": [Key.Key_4, Control.NULL],
+        "5": [Key.Key_5, Control.NULL],
+        "6": [Key.Key_6, Control.NULL],
+        "7": [Key.Key_7, Control.NULL],
+        "8": [Key.Key_8, Control.NULL],
+        "9": [Key.Key_9, Control.NULL],
+        "0": [Key.Key_0, Control.NULL],
+
+        "!": [Key.Key_1, Control.L_SHIFT],
+        "@": [Key.Key_2, Control.L_SHIFT],
+        "#": [Key.Key_3, Control.L_SHIFT],
+        "$": [Key.Key_4, Control.L_SHIFT],
+        "%": [Key.Key_5, Control.L_SHIFT],
+        "^": [Key.Key_6, Control.L_SHIFT],
+        "&": [Key.Key_7, Control.L_SHIFT],
+        "*": [Key.Key_8, Control.L_SHIFT],
+        "(": [Key.Key_9, Control.L_SHIFT],
+        ")": [Key.Key_0, Control.L_SHIFT],
+
+        "-": [Key.Key_Minus, Control.NULL],
+        "_": [Key.Key_Minus, Control.L_SHIFT],
+
+        "=": [Key.Key_Plus, Control.NULL],
+        "+": [Key.Key_Plus, Control.L_SHIFT],
+
+        "[": [Key.Key_Bracket_Left, Control.NULL],
+        "{": [Key.Key_Bracket_Left, Control.L_SHIFT],
+
+        "]": [Key.Key_Bracket_Right, Control.NULL],
+        "}": [Key.Key_Bracket_Right, Control.L_SHIFT],
+
+        ";": [Key.Key_Colon, Control.NULL],
+        ":": [Key.Key_Colon, Control.L_SHIFT],
+
+        "'": [Key.Key_Quote, Control.NULL],
+        '"': [Key.Key_Quote, Control.L_SHIFT],
+
+        ",": [Key.Key_Less, Control.NULL],
+        "<": [Key.Key_Less, Control.L_SHIFT],
+
+        ".": [Key.Key_Greater, Control.NULL],
+        ">": [Key.Key_Greater, Control.L_SHIFT],
+
+        "/": [Key.Key_Question, Control.NULL],
+        "?": [Key.Key_Question, Control.L_SHIFT],
+
+        "`": [Key.Key_Tilde, Control.NULL],
+        "~": [Key.Key_Tilde, Control.L_SHIFT],
+
+        " ": [Key.Key_Space, Control.NULL]
+
+    }
+
     def __init__(self, ser: Serial):
         self.ser = ser
 
@@ -134,3 +246,52 @@ class KeyBoard:
 
     def release(self):
         return self.send_data([self.Key.RELEASE], self.Control.NULL)
+
+    def input_string(self, s: str):
+        for c in s:
+            command = self.key_map.get(c, None)
+            if command is None:
+                logger.error(f"不兼容的字符:{c}")
+                return
+            self.send_data([command[0]], ctrl=command[1])
+            self.release()
+
+    def press_enter_key(self):
+        self.send_data([self.Key.Key_Enter])
+        self.release()
+
+    def press_shift_key(self):
+        self.send_data([self.Key.Key_Shift])
+        self.release()
+
+    def press_space_key(self):
+        self.send_data([self.Key.Key_Space])
+        self.release()
+
+    def press_backspace_key(self):
+        self.send_data([self.Key.Key_Backspace])
+        self.release()
+
+    def press_tab_key(self):
+        self.send_data([self.Key.Key_Tab])
+        self.release()
+
+    def maximize(self):
+        self.send_data([self.Key.Key_Up], self.Control.L_WIN)
+        self.release()
+
+    def fullscreen(self):
+        self.send_data([self.Key.Key_F11])
+        self.release()
+
+    def close(self):
+        self.send_data([self.Key.Key_F4], self.Control.L_ALT)
+        self.release()
+
+    def back_desktop(self):
+        self.send_data([self.Key.Key_D], self.Control.L_WIN)
+        self.release()
+
+    def switch_input(self):
+        self.send_data([self.Key.Key_Space], self.Control.L_CTRL)
+        self.release()
